@@ -47,7 +47,7 @@ full)
     ip route replace default via $PROXY_IP dev $WAN_IFACE table 2
     ;;
 partial)
-    PROXY_PORT=8888
+    [ -z $PROXY_PORT ] && PROXY_PORT=8888
     #LAN_IP=`nvram get lan_ipaddr`
     LAN_IP=192.168.3.1
     LAN_NET=$LAN_IP/`nvram get lan_netmask`
@@ -73,5 +73,6 @@ esac
 if [ $? = 0 ]; then
     echo $PROXY_TYPE > $CGI_DIR/PROXY_TYPE
     [ ! -z $PROXY_IP ] && echo $PROXY_IP > $CGI_DIR/PROXY_IP
+    echo $PROXY_PORT > $CGI_DIR/PROXY_PORT
     echo $DEVICE_MAC > $CGI_DIR/DEVICE_MAC
 fi

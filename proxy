@@ -6,6 +6,7 @@ echo ""
 CGI_DIR=/www/cgi-bin
 CURRENT_PROXY_TYPE=`cat $CGI_DIR/PROXY_TYPE`
 CURRENT_PROXY_IP=`cat $CGI_DIR/PROXY_IP`
+CURRENT_PROXY_PORT=`cat $CGI_DIR/PROXY_PORT`
 CURRENT_DEVICE_MAC=`cat $CGI_DIR/DEVICE_MAC`
 
 ARGS=`echo "$QUERY_STRING" | tr '&' ' '`
@@ -25,26 +26,30 @@ echo "<body>"
 echo '<br><div class="container">'
 echo "<h3>Proxy Configuration</h3>"
 echo "<p>Current Proxy IP: <code>$CURRENT_PROXY_IP</code></p>"
+echo "<p>Current Proxy Port: <code>$CURRENT_PROXY_PORT</code></p>"
 echo "<p>Current Device MAC: <code>$CURRENT_DEVICE_MAC</code></p>"
-
-echo "<p><a href=\"http://$CURRENT_PROXY_IP:8081/\">Possible mitmweb instance</a></p>"
+#echo "<p><a href=\"http://$CURRENT_PROXY_IP:8081/\">Possible mitmweb instance</a></p>"
 echo '<form action="proxy" method="get">'
 echo '<fieldset class="form-group">'
 echo '<label>Proxy type</label>'
 echo '<div class="form-check">'
 echo '<label class="form-check-label">'
-echo "<input type="radio" class="form-check-input" name="proxy-type" value="full" `[ $CURRENT_PROXY_TYPE = "full" ] && echo "checked"`>full<sup>1</sup><br>"
+echo "<input type="radio" class="form-check-input" name="proxy-type" value="full" `[ $CURRENT_PROXY_TYPE = "full" ] && echo "checked"`>full <sup>1</sup><br>"
 echo '</label>'
 echo '</div>'
 echo '<div class="form-check">'
 echo '<label class="form-check-label">'
-echo "<input type="radio" class="form-check-input" name="proxy-type" value="partial" `[ $CURRENT_PROXY_TYPE = "partial" ] && echo "checked"`>partial<sup>2</sup><br>"
+echo "<input type="radio" class="form-check-input" name="proxy-type" value="partial" `[ $CURRENT_PROXY_TYPE = "partial" ] && echo "checked"`>partial <sup>2</sup><br>"
 echo '</label>'
 echo '</div>'
 echo '</fieldset>'
 echo '<fieldset class="form-group">'
 echo '<label for="proxy">Proxy IP</label>'
 echo "<input class="form-control" type="text" name="proxy-ip" value="$CURRENT_PROXY_IP">"
+echo '</fieldset>'
+echo '<fieldset class="form-group">'
+echo '<label for="proxy">Proxy Port <sup>3</sup></label>'
+echo "<input class="form-control" type="text" name="proxy-port" value="$CURRENT_PROXY_PORT">"
 echo '</fieldset>'
 echo '<fieldset class="form-group">'
 echo '<label for="mac">Device MAC</label>'
@@ -54,8 +59,9 @@ echo '<fieldset class="form-group">'
 echo '<input class="btn btn-primary btn-block btn-large" type="submit">'
 echo '</fieldset>'
 echo "</form>"
-echo "<br><br><p><sup>1</sup>This is suitable only for mitmproxy or mitmweb running on a Linux machine. Run <code>sudo iptables -A PREROUTING -t nat -i \$net_iface -p tcp -m multiport --dports 80,443 -j REDIRECT --to-port 8080</code> on the host. Start mitmproxy with the options <code> --ignore \.\*:443 --follow -T --host</code>"
-echo "<p><sup>2</sup>Use this for Charles on any OS.</p>"
+echo "<br><br><p><sup>1</sup> This is suitable only for mitmproxy or mitmweb running on a Linux machine. Run <code>sudo iptables -A PREROUTING -t nat -i \$net_iface -p tcp -m multiport --dports 80,443 -j REDIRECT --to-port 8080</code> on the host. Start mitmproxy with the options <code> --ignore \.\*:443 --follow -T --host</code>.</p>"
+echo "<p><sup>2</sup> Use this for Charles on any OS.</p>"
+echo "<p><sup>3</sup> Only used for <code>Proxy type</code> <code>partial</code>.</p>"
 echo "</div>"
 
 echo "</body>"
