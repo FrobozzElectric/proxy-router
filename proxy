@@ -1,0 +1,59 @@
+#!/bin/sh
+
+echo "Content-type: text/html"
+echo ""
+
+CGI_DIR=/www/cgi-bin
+CURRENT_PROXY_TYPE=`cat $CGI_DIR/PROXY_TYPE`
+CURRENT_PROXY_IP=`cat $CGI_DIR/PROXY_IP`
+CURRENT_DEVICE_MAC=`cat $CGI_DIR/DEVICE_MAC`
+
+ARGS=`echo $QUERY_STRING | tr '&' ' '`
+
+if [ ! -z "$ARGS" ]; then
+    $CGI_DIR/firewall.sh "$ARGS"
+    echo '<meta http-equiv="refresh" content="0; url=proxy" />'
+fi
+
+echo "<!doctype html>"
+echo '<meta name="viewport" content="width=device-width, initial-scale=1">'
+echo "<head>"
+echo '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">'
+echo "</head>"
+
+echo "<body>"
+echo '<br><div class="container">'
+echo "<h3>Proxy Configuration</h3>"
+echo "<p>Current Proxy IP: <code>$CURRENT_PROXY_IP</code></p>"
+echo "<p>Current Device MAC: <code>$CURRENT_DEVICE_MAC</code></p>"
+
+echo "<p><a href=\"http://$CURRENT_PROXY_IP:8081/\">Possible mitmweb instance</a></p>"
+echo '<form action="proxy" method="get">'
+echo '<fieldset class="form-group">'
+echo '<div class="form-check">'
+echo '<label class="form-check-label">'
+echo "<input type="radio" class="form-check-input" name="proxy-type" value="full" `[ $CURRENT_PROXY_TYPE = "full" ] && echo "checked"`>full<br>"
+echo '</label>'
+echo '</div>'
+echo '<div class="form-check">'
+echo '<label class="form-check-label">'
+echo "<input type="radio" class="form-check-input" name="proxy-type" value="partial" `[ $CURRENT_PROXY_TYPE = "partial" ] && echo "checked"`>partial<br>"
+echo '</label>'
+echo '</div>'
+echo '</fieldset>'
+echo '<fieldset class="form-group">'
+echo '<label for="proxy">Proxy IP</label>'
+echo "<input class="form-control" type="text" name="proxy" value="$CURRENT_PROXY_IP">"
+echo '</fieldset>'
+echo '<fieldset class="form-group">'
+echo '<label for="mac">Device MAC</label>'
+echo "<input class="form-control" type="text" name="mac" value="$CURRENT_DEVICE_MAC">"
+echo '</fieldset>'
+echo '<fieldset class="form-group">'
+echo '<input class="btn btn-primary btn-block btn-large" type="submit">'
+echo '</fieldset>'
+echo "</form>"
+echo "</div>"
+
+echo "</body>"
+echo "</html>"
