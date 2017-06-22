@@ -68,7 +68,8 @@ echo '<p>For Linux, run the following on the host machine. Replace <code>$INTERF
 echo '<p>For mac OS use: <pre>echo "
 rdr pass inet proto tcp from any to any port 80 -> 127.0.0.1 port 8080
 rdr pass inet proto tcp from any to any port 443 -> 127.0.0.1 port 8080
-" | sudo pfctl -ef -</pre>'
+" | sudo pfctl -ef -</pre><p> '
+echo "More info for macOS <a href="https://salferrarello.com/mac-pfctl-port-forwarding/">here</a>.</p>"
 echo "<p>Start mitmproxy with the options <code> --follow -T --host</code>. Add <code> --ignore \.\*:443</code> to ignore SSL traffic.</p>"
 echo "<p><sup>2</sup> Use this for Charles on any OS.</p>"
 echo "<p><sup>3</sup> Only used for <code>Proxy type</code> <code>partial</code>.</p>"
