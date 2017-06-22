@@ -19,6 +19,7 @@ fi
 echo "<!doctype html>"
 echo '<meta name="viewport" content="width=device-width, initial-scale=1">'
 echo "<head>"
+echo "<style>pre { background: WhiteSmoke; padding: 10px; border-radius: 5px; }</style>"
 echo "<title>Proxy Configuration</title>"
 echo '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">'
 echo "</head>"
@@ -60,7 +61,15 @@ echo '<fieldset class="form-group">'
 echo '<input class="btn btn-primary btn-block btn-large" type="submit">'
 echo '</fieldset>'
 echo "</form>"
-echo "<br><br><p><sup>1</sup> This is suitable only for mitmproxy or mitmweb running on a Linux machine. Run <code>sudo iptables -A PREROUTING -t nat -i \$net_iface -p tcp -m multiport --dports 80,443 -j REDIRECT --to-port 8080</code> on the host. Start mitmproxy with the options <code> --ignore \.\*:443 --follow -T --host</code>.</p>"
+echo "<br><br>"
+echo "<p><sup>1</sup> This is suitable only for mitmproxy or mitmweb running on a Linux or macOS machine.</p>"
+echo '<p>For Linux, run the following on the host machine. Replace <code>$INTERFACE</code> with network interface name: 
+<pre>sudo iptables -A PREROUTING -t nat -i $INTERFACE -p tcp -m multiport --dports 80,443 -j REDIRECT --to-port 8080</pre><p>'
+echo '<p>For mac OS use: <pre>echo "
+rdr pass inet proto tcp from any to any port 80 -> 127.0.0.1 port 8080
+rdr pass inet proto tcp from any to any port 443 -> 127.0.0.1 port 8080
+" | sudo pfctl -ef -</pre>'
+echo "<p>Start mitmproxy with the options <code> --follow -T --host</code>. Add <code> --ignore \.\*:443</code> to ignore SSL traffic.</p>"
 echo "<p><sup>2</sup> Use this for Charles on any OS.</p>"
 echo "<p><sup>3</sup> Only used for <code>Proxy type</code> <code>partial</code>.</p>"
 echo "</div>"
