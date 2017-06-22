@@ -20,12 +20,7 @@ for arg in "$@"; do
     esac
 done
 
-exit 0
-
 CGI_DIR=/www/cgi-bin
-PROXY_TYPE=$1
-PROXY_IP=$2
-DEVICE_MAC=$3
 WAN_IFACE=eth0.2
 OLD_PROXY_IP=`cat /www/cgi-bin/PROXY_IP`
 
@@ -34,7 +29,9 @@ iptables -F && iptables-restore < $CGI_DIR/default.rules
 
 case $PROXY_TYPE in
 full)
-    ip route del default via $OLD_PROXY_IP dev $WAN_IFACE table 2
+    # maybe not needed?
+    #ip route flush $OLD_PROXY_IP
+    #ip route del default via $OLD_PROXY_IP dev $WAN_IFACE table 2
 
     if [ ! -z $DEVICE_MAC ]; then
         iptables -t mangle -A PREROUTING -j ACCEPT -p tcp -m multiport --dports 80,443 -s $PROXY_IP -m mac --mac-source $DEVICE_MAC
@@ -45,7 +42,9 @@ full)
     fi
 
     ip rule add fwmark 3 table 2
-    ip route add default via $PROXY_IP dev $WAN_IFACE table 2
+    #ip route add default via $PROXY_IP dev $WAN_IFACE table 2
+    #[ $? != 0 ] && 
+    ip route replace default via $PROXY_IP dev $WAN_IFACE table 2
     ;;
 partial)
     PROXY_PORT=8888
@@ -68,10 +67,11 @@ partial)
     ;;
 *)
     echo "unreconized proxy type \"$PROXY_TYPE\""
+    exit 1
 esac
 
 if [ $? = 0 ]; then
     echo $PROXY_TYPE > $CGI_DIR/PROXY_TYPE
-    echo $PROXY_IP > $CGI_DIR/PROXY_IP
+    [ ! -z $PROXY_IP ] && echo $PROXY_IP > $CGI_DIR/PROXY_IP
     echo $DEVICE_MAC > $CGI_DIR/DEVICE_MAC
 fi
