@@ -62,15 +62,15 @@ echo '<input class="btn btn-primary btn-block btn-large" type="submit">'
 echo '</fieldset>'
 echo "</form>"
 echo "<br><br>"
-echo "<p><sup id="note-1"><a href="#sup-1">[1]</a></sup> This is suitable only for mitmproxy or mitmweb running on a Linux or macOS machine.</p>"
-echo '<p>For Linux, run the following on the host machine. Replace <code>$INTERFACE</code> with network interface name: 
-<pre>sudo iptables -A PREROUTING -t nat -i $INTERFACE -p tcp -m multiport --dports 80,443 -j REDIRECT --to-port 8080</pre><p>'
-echo '<p>For mac OS use: <pre>echo "
+echo "<p><sup id="note-1"><a href="#sup-1">[1]</a></sup> This is suitable only for mitmproxy or mitmweb running on a Linux or macOS machine."
+echo 'For Linux, run the following on the host machine. Replace <code>$INTERFACE</code> with network interface name: 
+<pre>sudo iptables -A PREROUTING -t nat -i $INTERFACE -p tcp -m multiport --dports 80,443 -j REDIRECT --to-port 8080</pre>'
+echo 'For mac OS use: <pre>echo "
 rdr pass inet proto tcp from any to any port 80 -> 127.0.0.1 port 8080
 rdr pass inet proto tcp from any to any port 443 -> 127.0.0.1 port 8080
-" | sudo pfctl -ef -</pre><p> '
-echo "More info for macOS <a href="https://salferrarello.com/mac-pfctl-port-forwarding/">here</a> and <a href="http://docs.mitmproxy.org/en/stable/transparent/osx.html">here</a>.</p>"
-echo "<p>Start mitmproxy with the options <code> --follow -T --host</code>. Add <code> --ignore \.\*:443</code> to ignore SSL traffic.</p>"
+" | sudo pfctl -ef -</pre></p>'
+echo "<p>More info for macOS <a href="https://salferrarello.com/mac-pfctl-port-forwarding/">here</a> and <a href="http://docs.mitmproxy.org/en/stable/transparent/osx.html">here</a>."
+echo "Start mitmproxy with the options <code> --follow -T --host</code>. Add <code> --ignore \.\*:443</code> to ignore SSL traffic.</p>"
 echo "<p><sup id="note-2"><a href="#sup-2">[2]</a></sup> Use this for Charles on any OS.</p>"
 echo "<p><sup id="note-3"><a href="#sup-3">[3]</a></sup> Only used for <code>Proxy type</code> <code>partial</code>.</p>"
 echo "</div>"
